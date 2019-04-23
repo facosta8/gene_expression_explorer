@@ -1,4 +1,7 @@
-![](/resources/logo.png)# Gene Expression Explorer
+
+<img src="/resources/logo.png" alt="alt text" width=80 height=100>
+
+# Gene Expression Explorer
 
 Una herramienta de R para explorar los patrones de expresión de genes con base en resultados de experimentos de de microarreglos.
 
