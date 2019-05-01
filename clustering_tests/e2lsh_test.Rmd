@@ -1,0 +1,148 @@
+
+```{r}
+library(tidyverse)
+```
+
+Leo gene 
+```{r}
+gene <- read_csv('../ejemplo/matriz_ejemplo.csv')
+```
+
+
+# DISTANCIA COSENO 
+LSH Planos aleatorios 
+
+
+
+Con $200$ funciones hash:
+
+```{r}
+
+len_pa <- ncol(gene)-1
+# Normalizo los datos 
+
+
+gene_s <- scale(t(gene[,-1]))
+
+# líneas sobre las que proyectar
+
+set.seed(101021)
+hashes <- lapply(1:200, function(i){
+    v <- rnorm(len_pa)
+    function(x){
+        ifelse(sum(v*x) >= 0, 1, -1) 
+    }
+})
+```
+
+Por ejemplo, la firma del primer elemento es:
+
+```{r}
+x <- as.numeric(df[1,-1])
+sapply(hashes, function(f) f(x))
+```
+
+Y ahora calcuamos la firma para cada elemento:
+
+```{r}
+df_agrup <- gene %>% gather('variable', 'valor', -X1) %>%
+                   group_by(X1) %>%
+                   arrange(variable) %>%
+                   summarise(vec_1 = list(valor))
+
+df_hash <- df_agrup %>%
+           mutate(gene = map(vec_1, function(x){
+              firma <-  sapply(hashes, function(f) f(x)) 
+              data_frame(id_hash = 1:length(firma),
+                         firma = firma) })) %>% 
+              select(-vec_1) %>% unnest
+df_hash
+```
+
+Vamos a amplificar la famiia de hashes. En este caso,
+escogemos $20$ bandas de $10$ hashes cada una.
+
+```{r, fig.width=5, fig.asp=0.8}
+f_1 <- function(x){
+    1-(1-((180-x)/180)^10)^20
+}
+curve(f_1, 0, 180)
+abline(v=20)
+```
+
+Ahora agrupamos y construimos las cubetas:
+
+```{r}
+df_hash_1 <- df_hash %>% 
+           mutate(banda  = (id_hash - 1) %% 20 + 1) %>%
+           mutate(h = paste(id_hash,firma)) %>%
+           arrange(X1)
+df_hash_1
+```
+
+
+```{r}
+cubetas <- df_hash_1 %>% 
+             group_by(X1, banda) %>%
+             summarise(cubeta = paste(h, collapse = '/')) 
+cubetas
+```
+
+```{r}
+cubetas_hash <- cubetas %>%
+                ungroup %>% rowwise %>%
+                mutate(cubeta = digest::digest(cubeta))
+cubetas_hash
+```
+
+```{r}
+cubetas_agrup <- cubetas_hash %>% group_by(cubeta) %>%
+                  summarise(ids = list(X1)) %>%
+                  mutate(num_ids = map_dbl(ids, length)) %>%
+                  filter(num_ids > 1 )
+cubetas_agrup
+```
+
+Como podemos ver, no existe una cubeta dominante sobre las otras, aunque hay unas cubetas que práctcamente encierran a todos los genes, no se pueden saber las causas por las que se encuentran dentro de una misma cubeta. 
+
+
+
+# DISTANCIA EUCLIDEANA 
+
+Con $200$ funciones hash:
+
+```{r}
+
+minimo <- 
+
+len_pa <- ncol(gene)-1
+
+set.seed(101021)
+
+
+hashes <- lapply(1:200, function(i){
+    v <- rnorm(len_pa)
+    function(x){
+        ifelse(sum(v*x) >= 0, 1, -1) 
+    }
+})
+```
+
+
+```{r}
+gene_s <- t(scale(t(gene[,-1])))
+
+# Defino las líneas para hashes
+
+
+sample(c(-4,4),1)
+
+library(sp)
+
+x <- c(1,5,4,8)
+y <- c(1,3,4,7)
+Lines(Line(cbind(x,y)), ID="a")
+
+
+```
+
