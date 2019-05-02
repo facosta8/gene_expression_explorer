@@ -19,12 +19,7 @@ Con $200$ funciones hash:
 ```{r}
 
 len_pa <- ncol(gene)-1
-# Normalizo los datos 
 
-
-gene_s <- scale(t(gene[,-1]))
-
-# líneas sobre las que proyectar
 
 set.seed(101021)
 hashes <- lapply(1:200, function(i){
@@ -107,42 +102,20 @@ Como podemos ver, no existe una cubeta dominante sobre las otras, aunque hay una
 
 
 
-# DISTANCIA EUCLIDEANA 
+# REVISO/INTERPRETO 
 
-Con $200$ funciones hash:
+
+# Euclideana todos 
 
 ```{r}
+gene_s <- gene[sample(nrow(gene),30), ]
 
-minimo <- 
+x <- dist(rbind(gene_s))
 
-len_pa <- ncol(gene)-1
-
-set.seed(101021)
-
-
-hashes <- lapply(1:200, function(i){
-    v <- rnorm(len_pa)
-    function(x){
-        ifelse(sum(v*x) >= 0, 1, -1) 
-    }
-})
+plot(hclust(as.dist(x)))
 ```
 
 
-```{r}
-gene_s <- t(scale(t(gene[,-1])))
-
-# Defino las líneas para hashes
 
 
-sample(c(-4,4),1)
-
-library(sp)
-
-x <- c(1,5,4,8)
-y <- c(1,3,4,7)
-Lines(Line(cbind(x,y)), ID="a")
-
-
-```
 
