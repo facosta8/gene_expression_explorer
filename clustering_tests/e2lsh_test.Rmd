@@ -32,7 +32,7 @@ hashes <- lapply(1:200, function(i){
 Por ejemplo, la firma del primer elemento es:
 
 ```{r}
-x <- as.numeric(df[1,-1])
+x <- as.numeric(gene[1,-1])
 sapply(hashes, function(f) f(x))
 ```
 
@@ -200,7 +200,7 @@ cubetas_agrup
 ## Pruebo con los contenidos de las cubetas
 
 ```{r}
-lista <- cubetas_agrup$ids[9]
+lista <- cubetas_agrup$ids[8] # selecciona el número de cubeta 
 lista <- unlist(lista, use.names=FALSE)
 ```
 
@@ -212,3 +212,155 @@ x <- dist(rbind(gene_cubeta))
 
 plot(hclust(as.dist(x)))
 ```
+
+
+
+# APROXIMACIÓN 2 
+
+Observando los datos me doy cuenta que los genes contienen distintas magnitudes, probablemente si normalizo los datos por gen logre encontrar una mejor aproximación por similitud coseno
+
+# DISTANCIA COSENO 
+LSH Planos aleatorios 
+
+
+
+Con $200$ funciones hash:
+
+```{r}
+# aquí la estandarizo
+
+gene_est <- t(scale(t(gene[,-1])))
+
+gene_est <- as.data.frame(gene_est)
+gene_est$X1 <- gene$X1
+
+gene_est <- gene_est %>% select(X1, everything())
+
+len_pa <- ncol(gene_est)-1
+
+set.seed(101021)
+hashes <- lapply(1:200, function(i){
+    v <- rnorm(len_pa)
+    function(x){
+        ifelse(sum(v*x) >= 0, 1, -1) 
+    }
+})
+```
+
+Por ejemplo, la firma del primer elemento es:
+
+```{r}
+x <- as.numeric(gene_est[1,-1])
+sapply(hashes, function(f) f(x))
+```
+
+Y ahora calcuamos la firma para cada elemento:
+
+```{r}
+df_agrup <- gene_est %>% gather('variable', 'valor', -X1) %>%
+                   group_by(X1) %>%
+                   arrange(variable) %>%
+                   summarise(vec_1 = list(valor))
+
+df_hash <- df_agrup %>%
+           mutate(gene_est = map(vec_1, function(x){
+              firma <-  sapply(hashes, function(f) f(x)) 
+              data_frame(id_hash = 1:length(firma),
+                         firma = firma) })) %>% 
+              select(-vec_1) %>% unnest
+df_hash
+```
+
+Vamos a amplificar la famiia de hashes. En este caso,
+escogemos $20$ bandas de $10$ hashes cada una.
+
+```{r, fig.width=5, fig.asp=0.8}
+f_1 <- function(x){
+    1-(1-((180-x)/180)^10)^20
+}
+curve(f_1, 0, 180)
+abline(v=20)
+```
+
+Ahora agrupamos y construimos las cubetas:
+
+```{r}
+df_hash_1 <- df_hash %>% 
+           mutate(banda  = (id_hash - 1) %% 20 + 1) %>%
+           mutate(h = paste(id_hash,firma)) %>%
+           arrange(X1)
+df_hash_1
+```
+
+
+```{r}
+cubetas <- df_hash_1 %>% 
+             group_by(X1, banda) %>%
+             summarise(cubeta = paste(h, collapse = '/')) 
+cubetas
+```
+
+```{r}
+cubetas_hash <- cubetas %>%
+                ungroup %>% rowwise %>%
+                mutate(cubeta = digest::digest(cubeta))
+cubetas_hash
+```
+
+```{r}
+cubetas_agrup <- cubetas_hash %>% group_by(cubeta) %>%
+                  summarise(ids = list(X1)) %>%
+                  mutate(num_ids = map_dbl(ids, length)) %>%
+                  filter(num_ids > 1 )
+cubetas_agrup
+```
+
+Evalúo al **grupo más grande**
+
+```{r}
+max_cub <- max(cubetas_agrup$num_ids)
+
+cube <- cubetas_agrup[cubetas_agrup$num_ids == max_cub,]
+cube <- unlist(cube$ids , use.names=FALSE)
+
+gene_cubeta <- gene[gene$X1 %in% cube,]
+
+x <- dist(rbind(gene_cubeta))
+
+plot(hclust(as.dist(x)))
+
+```
+
+```{r}
+max(x)
+```
+
+
+Evalúo al **primer grupo** (no es tán grande y se puede entender mejor)
+
+```{r}
+cube <- unlist(cubetas_agrup$ids[1] , use.names=FALSE)
+
+gene_cubeta <- gene[gene$X1 %in% cube,]
+
+x <- dist(rbind(gene_cubeta))
+
+plot(hclust(as.dist(x)))
+
+```
+
+Evalúo al **los datos estandarizados** (trato de entender las distancias mayores y comparar con mis cubetas)
+
+```{r}
+
+muestra <- gene_est[sample(nrow(gene_est), 5000), ]
+
+x <- dist(rbind(muestra))
+
+plot(hclust(as.dist(x)))
+
+```
+```{r}
+max(x)
+```
+
