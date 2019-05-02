@@ -8,21 +8,28 @@ os.chdir('git/gene_expression_explorer')
 gene = pd.read_csv('ejemplo/matriz_ejemplo.csv')
 
 def isBetween(a, b, c):
-    crossproduct = (c.y - a.y) * (b.x - a.x) - (c.x - a.x) * (b.y - a.y)
+    crossproduct = (c[1] - a[1]) * (b[0] - a[0]) - (c[0] - a[0]) * (b[1] - a[1])
 
     # compare versus epsilon for floating point values, or != 0 if using integers
     if abs(crossproduct) > epsilon:
         return False
 
-    dotproduct = (c.x - a.x) * (b.x - a.x) + (c.y - a.y)*(b.y - a.y)
+    dotproduct = (c[0] - a[0]) * (b[0] - a[0]) + (c[1] - a[1])*(b[1] - a[1])
     if dotproduct < 0:
         return False
 
-    squaredlengthba = (b.x - a.x)*(b.x - a.x) + (b.y - a.y)*(b.y - a.y)
+    squaredlengthba = (b[0] - a[0])*(b[0] - a[0]) + (b[1] - a[1])*(b[1] - a[1])
     if dotproduct > squaredlengthba:
         return False
 
     return True
+
+
+a=[0,0]
+b=[10,10]
+c=[1,1]
+
+
 
 
 
