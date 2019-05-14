@@ -3,13 +3,14 @@ library(purrr)
 library(glue)
 library(GEOquery)
 
-
+# Función interna. Ignorar
 mensaje_error <- function(nombre) {
-    print('Hubo un error inesperado. Ver informaci�n pertinente abajo.')
+    print('Hubo un error inesperado. Ver informaci?n pertinente abajo.')
     print(nombre)
 }
 
 
+# Función interna, no se usa directamente.
 generar_url <- function(t, nmax) {
     base <-
         'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?'
@@ -20,6 +21,11 @@ generar_url <- function(t, nmax) {
     paste0(base, db, term, retmax)
 }
 
+# esta función permite realizar búsquedas en la base de datos de expresión
+# de genes.
+# Toma dos parámetros: una string con los términos que se quieren buscar
+# y el número de resultados que se quieren buscar. El default es 10
+# Regresa un vector con todos los IDs de los resultados
 listar_opciones <- function(t, nmax = 10) {
     url <- generar_url(t, nmax)
     download.file(url, 'busqueda.xml', quiet = TRUE)
@@ -28,6 +34,8 @@ listar_opciones <- function(t, nmax = 10) {
     ids
 }
 
+
+# Función interna, no se usa directamente.
 ver_sumario <- function(uid) {
     base <-
         'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?'
@@ -41,6 +49,10 @@ ver_sumario <- function(uid) {
     c(titulo, descripcion)
 }
 
+
+# esta función toma un vector con IDs numéricos de la base de datos de 
+# expresión de genes y te regresa un dataframe con los títulos de los estudios 
+# y sus descripciones
 leer_opciones <- function(uids) {
     df <- data.frame(id = rep(' ', length(uids)),
                      title = rep(' ', length(uids)), 
@@ -58,6 +70,8 @@ leer_opciones <- function(uids) {
 
 # plataforma <- Meta(gds)$platform
 
+# esta función toma la plataforma del estudio que descargamos y la matriz de 
+# expresión de genes y descarga la información de todos los genes encontrados
 db_genes <- function(plataforma, matriz) {
     glp <- getGEO(plataforma, destdir=".")
     # sacamos los nombres de los genes de la matriz de expresion original
@@ -66,7 +80,9 @@ db_genes <- function(plataforma, matriz) {
     gen_db
 }
 
-
+# Esta función toma el ID de un gen y la base de datos correspondiente
+# y regresa la secuencia de ADN del gen, su nombre, sus funciones, los 
+# componentes celulares en que se encuentra y los procesos en que participa
 info_gen <- function(id, db) {
     g <- db[db$ID == id, ]
     secuencia <- g$SEQUENCE
@@ -74,15 +90,6 @@ info_gen <- function(id, db) {
     componente <- g$Ontology_Component
     proceso <- g$Ontology_Process
     funcion <- g$Ontology_Function
-    # texto <- paste(
-    #     'MOLECULAR FUNCTION',
-    #     funcion, 
-    #     'CELLULAR COMPONENT',
-    #     componente,
-    #     'BIOLOGICAL PROCESS\n',
-    #     proceso,
-    #     collapse = '\n'
-    # )
     list(nombre, secuencia, funcion, componente, proceso)
 }
 
