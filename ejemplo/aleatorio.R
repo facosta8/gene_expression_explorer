@@ -1,6 +1,7 @@
 ## Inicio. Cargo mis librerias y la matriz
 library(dplyr)
 library(purrr)
+library(tidyr)
 setwd("C:/Users/facosta8/giteando/gene_expression_explorer/ejemplo")
 m1 <- read.csv('matriz_ejemplo.csv')
 # quito las columnas con valores NA. Son pocas, pero igual debemos 
@@ -69,11 +70,11 @@ buscar_cubetas <- function(v1,v2, dd) {
 #mm <- head(m, 2000)
 mm <- m
 
-t <- 200  # numero de funciones hash
+t <- 125  # numero de funciones hash
 # tamaño de cada segmento en mi hiperplano. Determina las distancias
 # en mi familia
-delta <- 10
-b <- 40   # numero de cubetas
+delta <- 6
+b <- 25   # numero de cubetas
 v <- ncol(mm)  # tamaño de cada vector
 r <- t/b  # elementos por cubeta
 
