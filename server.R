@@ -40,6 +40,8 @@ server <- function(input, output, session) {
       genes <<- db_genes_01(paste0('GDS',id))
       # colnames(genes)[1] <- 'gen'
       print(nrow(genes)) #Log
+      
+      base_datos_genes <<- db_genes(paste0('GDS', id), genes)
     
     })
   
@@ -80,7 +82,11 @@ server <- function(input, output, session) {
         if (nrow(df_cubetas) > 0){
           # Genero listado de cubetas:
           lst_cubetas <- c(" ", df_cubetas %>% 
-                             mutate(ids = paste(row_number(), " - ", n_elementos, " - ",  unlist(lapply(candidatos, "[[", 1)))) %>%
+                             mutate(ids = paste(row_number(), 
+                                                " - ", 
+                                                n_elementos, 
+                                                " - ",  
+                                                unlist(lapply(candidatos, "[[", 1)))) %>%
                              select(ids))
           
           updateSelectInput(session, "i_cubetas", choices = lst_cubetas)
@@ -154,7 +160,7 @@ server <- function(input, output, session) {
       cubeta_tmp <- unlist(df_cubetas[id,]$candidatos)
 
       # Calculo las distancias para los genes de la cubeta seleccionada:
-      cubeta_dist <<- as.matrix(dist(genes[cubeta_tmp,],))
+      cubeta_dist <<- as.matrix(dist(genes[cubeta_tmp,])) # habia una coma extra 
       cubeta_dist_m <<- as.matrix(cubeta_dist[,-1])
       max_dist <<- round(max(cubeta_dist_m),0) + 1
       
@@ -208,11 +214,13 @@ server <- function(input, output, session) {
   
   output$selection <- renderPrint({
     s <- event_data("plotly_click")
+    infox <- info_gen(s$x[1], base_datos_genes)
+    infoy <- info_gen(s$y[1], base_datos_genes)
+    info <- concatenar_info(infox, infoy)
     if (length(s) == 0) {
-      "Click on a cell in the heatmap to display values"
+      cat("Haz click en una celda del heatmap para ver los genes comparados.")
     } else {
-      cat("You selected: \n\n")
-      as.list(s)
+      cat(info)
     }
   })
   # -------------------------------------------------------------------------- #

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE eSearchResult PUBLIC "-//NLM//DTD esearch 20060628//EN" "https://eutils.ncbi.nlm.nih.gov/eutils/dtd/20060628/esearch.dtd">
+<eSearchResult><Count>191</Count><RetMax>10</RetMax><RetStart>0</RetStart><IdList>
+<Id>5638</Id>
+<Id>5431</Id>
+<Id>5426</Id>
+<Id>5420</Id>
+<Id>5392</Id>
+<Id>5381</Id>
+<Id>5349</Id>
+<Id>5296</Id>
+<Id>5275</Id>
+<Id>5274</Id>
+</IdList><TranslationSet><Translation>     <From>skin</From>     <To>"skin"[MeSH Terms] OR skin[All Fields]</To>    </Translation></TranslationSet><TranslationStack>   <TermSet>    <Term>"skin"[MeSH Terms]</Term>    <Field>MeSH Terms</Field>    <Count>61343</Count>    <Explode>Y</Explode>   </TermSet>   <TermSet>    <Term>skin[All Fields]</Term>    <Field>All Fields</Field>    <Count>56210</Count>    <Explode>N</Explode>   </TermSet>   <OP>OR</OP>   <OP>GROUP</OP>   <TermSet>    <Term>gds[Entry Type]</Term>    <Field>Entry Type</Field>    <Count>4348</Count>    <Explode>N</Explode>   </TermSet>   <OP>AND</OP>  </TranslationStack><QueryTranslation>("skin"[MeSH Terms] OR skin[All Fields]) AND gds[Entry Type]</QueryTranslation></eSearchResult>

@@ -73,10 +73,10 @@ mm <- m
 t <- 125  # numero de funciones hash
 # tamaño de cada segmento en mi hiperplano. Determina las distancias
 # en mi familia
-delta <- 6
-b <- 25   # numero de cubetas
+delta <- 6 # tamaño del segmento en la recta unitaria
+b <- 25   # numero de bandas
 v <- ncol(mm)  # tamaño de cada vector
-r <- t/b  # elementos por cubeta
+r <- t/b  # elementos por bandas
 
 # definición de la familia
 glue::glue(

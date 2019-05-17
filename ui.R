@@ -34,11 +34,11 @@ dashboardHeader(title = "Microarray Viewer "),
       tabItem(tabName = "browser",
               fluidRow(
                   box(
-                    title = "Expresiones de genes:",
+                    title = "Busqueda de estudios:",
                     solidHeader = TRUE,
                     status = "primary",
-                    selectInput("i_gen", "Selección:", 
-                                choices = lst_gen),
+                    textInput("i_gen", "Selección:", 
+                                placeholder = 'Elija el termino que quiera buscar'),
                     width = 8
                   ),
                 box(
@@ -51,7 +51,9 @@ dashboardHeader(title = "Microarray Viewer "),
                   # background = "light-blue"
                 ),
                 column(12, align="left",
-                  actionButton("btn01", label=" Listar resultados ", icon = icon("download"),
+                  actionButton("btn01", 
+                               label=" Listar resultados ", 
+                               icon = icon("download"),
                                style="color: #fff; background-color: coral; border-color: light-gray")
                 )
               ),

@@ -80,6 +80,7 @@ lsh_gene <- function(df_genes){
     group_by(cubeta) %>% 
     summarise(n_elementos = n(),
               candidatos = list(gen)) %>% 
+    filter(n_elementos >= 8) %>%   
     arrange(desc(n_elementos)) 
   
   # eliminamos las cubetas de un elemento
