@@ -39,8 +39,8 @@ library(visNetwork)
 library(reshape2)
 library(rlist)
 
-source('../shiny_gen01/load_data.R')
-source('../shiny_gen01/geo_api.R')
+source('load_data.R')
+source('geo_api.R')
 # ---------------------------------------------------------------------------- #
 
 # ---------------------------------------------------------------------------- #

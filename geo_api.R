@@ -69,11 +69,13 @@ leer_opciones <- function(uids) {
   df
 }
 
-# plataforma <- Meta(gds)$platform
+# plataforma <- 
 
 # esta función toma la plataforma del estudio que descargamos y la matriz de 
 # expresión de genes y descarga la información de todos los genes encontrados
-db_genes <- function(plataforma, matriz) {
+db_genes <- function(gid, matriz) {
+  gds <- getGEO(gid, destdir=".")
+  plataforma <- Meta(gds)$platform
   glp <- getGEO(plataforma, destdir=".")
   # sacamos los nombres de los genes de la matriz de expresion original
   genes <- rownames(matriz)
@@ -96,12 +98,25 @@ db_genes_01 <- function(plataforma) {
 # componentes celulares en que se encuentra y los procesos en que participa
 info_gen <- function(id, db) {
   g <- db[db$ID == id, ]
-  secuencia <- g$SEQUENCE
-  nombre <- g$Definition
-  componente <- g$Ontology_Component
-  proceso <- g$Ontology_Process
-  funcion <- g$Ontology_Function
-  list(nombre, secuencia, funcion, componente, proceso)
+  sec <- g$SEQUENCE
+  nom <- g$Definition
+  co <- g$Ontology_Component
+  pro <- g$Ontology_Process
+  fu <- g$Ontology_Function
+  list(Nombre=nom, Secuencia=sec, Funcion=fu, Componente=co, Proceso=pro)
 }
 
-
+concatenar_info <- function(gen1, gen2) {
+    paste0('FIRST GEN ================================', '\n\n',
+           'Name', '\n', gen1$Nombre, '\n\n',
+           'Sequence', '\n', gen1$Secuencia, '\n\n',
+           'Molecular function', '\n', gen1$Funcion, '\n\n',
+           'Cellular component', '\n', gen1$Componente, '\n\n',
+           'Biological process', '\n', gen1$Proceso, '\n\n',
+           'SECOND GEN ================================', '\n\n',
+           'Name', '\n', gen2$Nombre, '\n\n',
+           'Sequence', '\n', gen2$Secuencia, '\n\n',
+           'Molecular function', '\n', gen2$Funcion, '\n\n',
+           'Cellular component', '\n', gen2$Componente, '\n\n',
+           'Biological process', '\n', gen2$Proceso, '\n\n')
+}
