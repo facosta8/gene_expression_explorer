@@ -43,7 +43,7 @@ La función hash *h* se define como sigue:
 
 -   Se crean cubetas de tamaño ![alt text](imagenes/gamma.gif) en *u* que ahora se encuentra en ![alt text](imagenes/r1.gif), este valor del índice de la cubeta es lo que regresará la función hash ![alt text](imagenes/ha.gif).
 
-    Si ![alt text](imagenes/gamma_02.gif) entonces la probabilidad ![alt text](imagenes/proba1.gif). Por otra parte si ![alt text](imagenes/abgamma.gif) entonces la probabilidad ![alt text](imagenes/proba2.gif). Esto se traduce en la familia sensible a la localidad ![alt text](imagenes/familia.gif).
+    Si ![alt text](imagenes/gamma_02.gif) entonces la probabilidad ![alt text](imagenes/proba1.gif). Por otra parte si ![alt text](imagenes/abgamma.gif) entonces la probabilidad ![alt text](imagenes/nuevo.gif). Esto se traduce en la familia sensible a la localidad ![alt text](imagenes/familia.gif).
 
 #### **Demostración gráfica de funciones hash**
 
@@ -62,10 +62,6 @@ Si se generaran otros trazos de líneas aleatorias sobre el espacio de ![alt tex
 
 
 
-Finalmente si se mezclaran distintas funciones hash se podría pensar que las clasificaciones dentro de cada cubeta se visualizaría como en la figura inferior.
-
-
-![alt text](imagenes/hash_t.png "todos los hashes")
 
 
 #### **Técnica de bandas**
