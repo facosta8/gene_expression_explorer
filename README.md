@@ -3,61 +3,24 @@
 
 # Gene Expression Explorer
 
-Una herramienta de R para explorar los patrones de expresión de genes con base en resultados de experimentos de de microarreglos.
+Shiny app para explorar los patrones de expresión de genes con base en resultados de experimentos de de microarreglos. Desarrollada para el curso de Métodos Análiticos 2019, impartido en el ITAM por el profesor Felipe González.
 
-## Pendientes
+### Autores
 
-Sugiero fuertemente leer el [tutorial](https://github.com/facosta8/gene_expression_explorer/tree/master/tutorial) antes de ver esto. Fases que quedan por hacer:
+* Ariel Vallarino. [GitHub](https://github.com/avallarino-ar)
+* Francisco Álvarez. [GitHub](https://github.com/fralvro/)
+* Francisco Acosta. [GitHub](https://github.com/facosta8)
 
-### Búsqueda del dataset
+#### Funcionamiento
 
-Herramienta que le permita al usuario hacer búsquedas en la base de datos de microarreglos [Geo Datasets](https://www.ncbi.nlm.nih.gov/gds) y elegir uno de los resultados.
+Esta herramienta nos permite buscar y explorar las bases de datos disponibles en línea en la plataforma de GEO y tiene los siguiente componentes:
 
-*Output*: el código único del dataset elegido.
+* **Browser**. Permite buscar los estudio disponibles en la plataforma GEO y ver el resumen del estudio.
 
-***Encargado:***
+* **Genes**. Permite seleccionar un estudio y descargar los datos de expresión correspondientes a él. Tras la operación, puede verse el número de genes que se analizaron y el número de muestras.
 
-*Status*: por hacer.
+* **Genes similares**. En esta sección se realiza el análisis de LSH con distancias euclidianas, con el fin de generar un cierto número de cubetas con genes cercanos entre sí. Una vez que el análisis concluye, el usuario puede seleccionar cualquier de las cubetas y el programa calcula la distancia real entre los genes, que se representa mediante un heatmap. Al hacer clic en cualquier celda del heatmap, es posible consultar las características de los genes que se comparan; esto incluye su nombre, secuencia, función, componentes celulares en los que se localiza y los procesos en que participa. Esto no está disponible para todos los estudios, ya que la información de a qué gen corresponde cada punto del microarreglo es algo que el fabricante pone en línea.
 
-### Carga de datos
+* **Red**. En esta sección puede verse la red de los genes de cualquiera de las cubetas detectadas. Es posible seleccionar a genes específicos (para ver cuáles son sus conexiones directas), así como modificar la distancia mínima para que se formen enlaces entre los diferentes nodos de la red.
 
-Toma el código del dataset y utiliza la librería `Geoquery` para descargar la matriz de expresión del microarreglo.
 
-*Output*: un objeto matriz de resultados, donde los nombres de columnas son las muestras y los nombres de fila los códigos de los genes.
-***Encargado:***
-
-*Status*: Casi concluido.
-
-### Cálculo de distancias
-
-Toma la matriz de expresión y calcula la distancia entre los diferentes elementos (renglones). Sugiero que tenga varios parámetros:
-
-* Comportamiento: puede hacer el cálculo de distancias entre todos los genes o puede usar una implementación minhash para agrupar los vectores en cubetas y calcular sólo la distancia entre los elementos de una misma cubeta.
-* Cubetas: permite al usario elegir la sensibilidad del minhash; algo así como "quiero capturar a todos los vectores que tengan una distancia de 70%" o algo así. Esto se logra modificando el tamaño del hash y el número de bandas, claro.
-* Tamaño de las cubetas: sólo calcula las distancias de las cubetas que tengan más de `n` elementos.
-
-*Output*: Matrices simétricas de distancias entre los elementos.
-
-***Encargado:***
-
-*Status*: por hacer.
-
-### Creación de red
-
-Toma la matriz de expresión y las matrices distancias y las usas para generar una representación de las diferentes redes. Las uniones son las distancias, claro está, y los nodos son los genes. La matriz de expresión da los valores de expresión de cada gen, que puede representarse en el tamaño o color del nodo. También permite visualizar la importancia de los nodos, usando centralidad, betweenness y demás medidas que vimos en clase. Finalmente (y esto no me queda tan claro), te debe permitir seleccionar un nodo para obtener más información del mismo.
-
-*Output*: representación de la red de expresión.
-
-***Encargado:***
-
-*Status*: por hacer.
-
-### Información del gen
-
-Cuando seleccionas un gen, busca su ID y extrae de la base de datos la información del mismo. Tipo de gen, código genético, en qué parte de los procesos celulares interviene, etc.
-
-*Output*: información del gen seleccionado.
-
-***Encargado:***
-
-*Status*: En proceso.
