@@ -1,5 +1,5 @@
 ui <- dashboardPage(  
-dashboardHeader(title = "Microarray Viewer "),
+dashboardHeader(title = "Gene Expression Explorer "),
   ## Sidebar content
   dashboardSidebar(
     sidebarMenu(

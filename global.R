@@ -39,8 +39,8 @@ library(visNetwork)
 library(reshape2)
 library(rlist)
 
-source('load_data.R')
-source('geo_api.R')
+source('scripts/load_data.R')
+source('scripts/geo_api.R')
 # ---------------------------------------------------------------------------- #
 
 # ---------------------------------------------------------------------------- #
